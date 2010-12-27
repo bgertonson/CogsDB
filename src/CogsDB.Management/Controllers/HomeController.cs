@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using System.Web.Mvc;
-using CogsDB.Management.Core;
 using CogsDB.Management.Core.Contracts;
 using CogsDB.Management.Models;
 

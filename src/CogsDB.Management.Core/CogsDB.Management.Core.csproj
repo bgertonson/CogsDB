@@ -44,7 +44,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="Contracts\IDocumentStoreAccess.cs" />
     <Compile Include="Contracts\IDocumentStoreLister.cs" />
     <Compile Include="DataAccess\SqlDocumentStoreAccess.cs" />
