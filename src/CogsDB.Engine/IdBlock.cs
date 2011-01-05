@@ -11,6 +11,8 @@ namespace CogsDB.Engine
             CurrentId = (BlockNumber - 1)*Size;
         }
 
+        public string Id { get; set; }
+
         public int BlockNumber { get; private set; }
         public int Size { get; private set; }
         private int CurrentId { get; set; }

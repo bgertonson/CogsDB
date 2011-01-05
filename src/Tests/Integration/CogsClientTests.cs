@@ -146,12 +146,11 @@ namespace Tests.Integration
             session.Delete(org.Id);
         }
 
-        private CogsSession GetCogsSession()
+        private ICogsSession GetCogsSession()
         {
-            var persister = new SqlPersister("integration");
-            var serializer = new JsonSerializer();
-            var idServer = new IdentityServer(persister);
-            return new CogsSession(persister, serializer, idServer);
+            var storage = new CogsStorage();
+            storage.Initialize(new CogsConfiguration() {ConnectionName = "remote"});
+            return storage.OpenSession();
         }
 
 

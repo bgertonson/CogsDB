@@ -6,11 +6,11 @@ namespace CogsDB.Engine
     public class IdentityServer: IIdentityServer
     {
         private static IDictionary<Type, IdBlock> _idServer = new Dictionary<Type, IdBlock>();
-        private IIdentityProvider _idProvider;
+        private object _lock = new object();
+        private const int BlockSize = 5;
 
-        public IdentityServer(IIdentityProvider idProvider)
+        public IdentityServer()
         {
-            _idProvider = idProvider;
         }
 
         public string GetNextIdentity<T>()
@@ -43,8 +43,30 @@ namespace CogsDB.Engine
 
         private IdBlock GetNewBlock(Type type)
         {
-            int blockNumber = _idProvider.GetNextBlock(type.Name);
-            return new IdBlock(blockNumber, 5);
+            var id = GetIdBlockDocumentId(type);
+            IdBlock block;
+            lock(_lock)
+            {
+                var storage = new CogsStorage();
+                var session = storage.OpenSession();
+
+                block = session.Load<IdBlock>(id);
+                if(block == null)
+                {
+                    block = new IdBlock(0, BlockSize) {Id = id};
+                }
+
+                block = new IdBlock(block.BlockNumber + 1, BlockSize) {Id = id};
+
+                session.Store<IdBlock>(block);
+                session.SubmitChanges();
+            }
+            return block;
+        }
+
+        private string GetIdBlockDocumentId(Type type)
+        {
+            return String.Format("identityblock.{0}", type.Name);
         }
     }
 }

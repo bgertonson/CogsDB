@@ -15,6 +15,18 @@ namespace CogsDB.Management
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+                "PutDocument", "{docStore}/docs/put", new {controller = "Document", action = "Put"});
+
+            routes.MapRoute(
+                "GetDocument", "{docStore}/docs/get/{id}", new {controller = "Document", action = "Get"});
+
+            routes.MapRoute(
+                "GetAllDocuments", "{docStore}/docs/get-all", new {controller = "Document", action = "GetAll"});
+
+            routes.MapRoute(
+                "DeleteDocument", "{docStore}/docs/delete/{id}", new {controller = "Document", action = "Delete"});
+
+            routes.MapRoute(
                 "Document", "{docStore}/{docType}/{docId}", new {controller = "Home", action = "ViewDocument"});
 
             routes.MapRoute(

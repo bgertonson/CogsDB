@@ -20,11 +20,11 @@ namespace CogsDB.Engine
         {
             if(String.IsNullOrEmpty(configuration.ConnectionName))
                 throw new ArgumentException("A Connection Name must be provided");
-
-            var persister = new SqlPersister(configuration.ConnectionName);
+            
+            var persister = PersisterFactory.Create(configuration.ConnectionName);
 
             SessionFactory.GetSession =
-                () => new CogsSession(persister, new JsonSerializer(), new IdentityServer(persister));
+                () => new CogsSession(persister, new JsonSerializer(), new IdentityServer());
             Func<ICogsSessionManager> factoryMethod;
             ManagerConfigurations.TryGetValue(configuration.SessionManagementStrategy, out factoryMethod);
             SessionManagerFactory.GetSessionManager = factoryMethod ??

@@ -1,4 +1,5 @@
-﻿using CogsDB.Management.Core;
+﻿using CogsDB.Engine;
+using CogsDB.Management.Core;
 using CogsDB.Management.Core.Contracts;
 using CogsDB.Management.Core.DataAccess;
 using CogsDB.Management.Core.Services;
@@ -28,6 +29,7 @@ namespace CogsDB.Management
             public override void Load()
             {
                 Bind<IDocumentStoreAccess>().To<SqlDocumentStoreAccess>();
+                Bind<ICogsPersister>().To<SqlPersister>();
             }
         }
     }
