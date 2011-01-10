@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <connectionStrings>
+    <add name="integration" connectionString="server=localhost\sqlexpress;database=docdb;uid=doc_user;pwd=d0cum3nt"/>
+    <add name="remote" connectionString="url=http://localhost:19092/docdb/docs" />
+  </connectionStrings>
+</configuration>
