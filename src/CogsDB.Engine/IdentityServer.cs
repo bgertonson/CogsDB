@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using CogsDB.Engine.Documents;
 
 namespace CogsDB.Engine
 {
     public class IdentityServer: IIdentityServer
     {
         private static IDictionary<Type, IdBlock> _idServer = new Dictionary<Type, IdBlock>();
-        private IIdentityProvider _idProvider;
+        private ICogsSession _session;
+        private object _lock = new object();
 
-        public IdentityServer(IIdentityProvider idProvider)
+        public IdentityServer(ICogsSession session)
         {
-            _idProvider = idProvider;
+            _session = session;
         }
 
         public string GetNextIdentity<T>()
@@ -43,8 +45,21 @@ namespace CogsDB.Engine
 
         private IdBlock GetNewBlock(Type type)
         {
-            int blockNumber = _idProvider.GetNextBlock(type.Name);
-            return new IdBlock(blockNumber, 5);
+            lock (_lock)
+            {
+                var tracker = _session.Load<IdTrackingDocument>(CogsSystem.Ids.IdentityTrackingDocument);
+                if (tracker == null) tracker = BuildTracker();
+                var typeTracker = tracker.GetTracker(type);
+                typeTracker.Increment();
+                (_session as CogsSession).StoreImmediate<IdTrackingDocument>(tracker);
+                return new IdBlock(typeTracker.LastBlock, typeTracker.BlockSize);
+            }
+        }
+
+        private IdTrackingDocument BuildTracker()
+        {
+            var doc = new IdTrackingDocument();
+            return doc;
         }
     }
 }

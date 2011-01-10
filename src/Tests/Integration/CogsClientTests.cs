@@ -150,8 +150,7 @@ namespace Tests.Integration
         {
             var persister = new SqlPersister("integration");
             var serializer = new JsonSerializer();
-            var idServer = new IdentityServer(persister);
-            return new CogsSession(persister, serializer, idServer);
+            return new CogsSession(persister, serializer);
         }
 
 

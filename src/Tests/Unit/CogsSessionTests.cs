@@ -18,9 +18,9 @@ namespace Tests.Unit
             var id = "does_not_exist";
             var persister = MockRepository.GenerateMock<ICogsPersister>();
             var serializer = MockRepository.GenerateMock<IDocumentSerializer>();
-            var identity = MockRepository.GenerateMock<IIdentityServer>();
+            //var identity = MockRepository.GenerateMock<IIdentityServer>();
 
-            var session = new CogsSession(persister, serializer, identity);
+            var session = new CogsSession(persister, serializer);
 
             persister.Expect(p => p.Get(id)).Return(null);
 
@@ -37,9 +37,9 @@ namespace Tests.Unit
             var bob = DataFactory.GetPerson("Bob", "Twilliger");
             var persister = MockRepository.GenerateMock<ICogsPersister>();
             var serializer = MockRepository.GenerateMock<IDocumentSerializer>();
-            var identity = MockRepository.GenerateMock<IIdentityServer>();
+            //var identity = MockRepository.GenerateMock<IIdentityServer>();
 
-            var session = new CogsSession(persister, serializer, identity);
+            var session = new CogsSession(persister, serializer);
 
             persister.Expect(p => p.Get(id)).Return(doc);
             serializer.Expect(s => s.Deserialize<Person>(doc.Content)).Return(bob);
@@ -53,9 +53,9 @@ namespace Tests.Unit
         {
             var persister = MockRepository.GenerateMock<ICogsPersister>();
             var serializer = MockRepository.GenerateMock<IDocumentSerializer>();
-            var identity = MockRepository.GenerateMock<IIdentityServer>();
+            //var identity = MockRepository.GenerateMock<IIdentityServer>();
             
-            var session = new CogsSession(persister, serializer, identity);
+            var session = new CogsSession(persister, serializer);
             return session;
         }
     }

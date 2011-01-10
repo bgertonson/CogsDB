@@ -48,7 +48,7 @@ select @num";
             Connection = connection;
         }
 
-        private void Put(Document document)
+        public void Put(Document document)
         {
             if (document.IsNew) Create(document);
             else Update(document);

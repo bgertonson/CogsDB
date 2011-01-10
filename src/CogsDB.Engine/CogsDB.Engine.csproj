@@ -47,7 +47,9 @@
     <Compile Include="CogsSession.cs" />
     <Compile Include="CogsSessionManagementStrategy.cs" />
     <Compile Include="CogsStorage.cs" />
+    <Compile Include="CogsSystem.cs" />
     <Compile Include="Document.cs" />
+    <Compile Include="Documents\IdTrackingDocument.cs" />
     <Compile Include="ICogsPersister.cs" />
     <Compile Include="ICogsConfiguration.cs" />
     <Compile Include="ICogsSession.cs" />

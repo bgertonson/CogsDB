@@ -15,11 +15,11 @@ namespace CogsDB.Engine
 
         private readonly IList<Document> _queue = new List<Document>();
 
-        public CogsSession(ICogsPersister persister, IDocumentSerializer serializer, IIdentityServer identityServer)
+        public CogsSession(ICogsPersister persister, IDocumentSerializer serializer)
         {
             _persister = persister;
             _serializer = serializer;
-            _identityServer = identityServer;
+            _identityServer = new IdentityServer(this);
         }
 
         public T Load<T>(string id) where T: class
@@ -58,23 +58,34 @@ namespace CogsDB.Engine
 
         public void Store<T>(T @object) where T: class
         {
+            Document document = BuildDocument(@object);
+
+            _queue.Add(document);
+        }
+
+        internal void StoreImmediate<T>(T @object) where T: class
+        {
+            var document = BuildDocument(@object);
+            _persister.Put(new[]{document});
+        }
+
+        private Document BuildDocument<T>(T @object) where T: class
+        {
             var id = ExtractId(@object);
             var metadata = ExtractMetadata(@object);
             bool isNew = !IsTracked(id);
             var content = _serializer.Serialize(@object);
             var meta = _serializer.Serialize(metadata);
-            var document = new Document
-            {
-                Id = id,
-                Type = typeof(T).Name,
-                Content = content,
-                Metadata = meta,
-                CreateDate = DateTime.Now,
-                ModifyDate = DateTime.Now,
-                IsNew = isNew
-            };
-
-            _queue.Add(document);
+            return new Document
+                       {
+                           Id = id,
+                           Type = typeof(T).Name,
+                           Content = content,
+                           Metadata = meta,
+                           CreateDate = DateTime.Now,
+                           ModifyDate = DateTime.Now,
+                           IsNew = isNew
+                       };
         }
 
         public void Delete(string id)

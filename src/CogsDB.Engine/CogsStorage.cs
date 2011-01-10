@@ -24,7 +24,7 @@ namespace CogsDB.Engine
             var persister = new SqlPersister(configuration.ConnectionName);
 
             SessionFactory.GetSession =
-                () => new CogsSession(persister, new JsonSerializer(), new IdentityServer(persister));
+                () => new CogsSession(persister, new JsonSerializer());
             Func<ICogsSessionManager> factoryMethod;
             ManagerConfigurations.TryGetValue(configuration.SessionManagementStrategy, out factoryMethod);
             SessionManagerFactory.GetSessionManager = factoryMethod ??
