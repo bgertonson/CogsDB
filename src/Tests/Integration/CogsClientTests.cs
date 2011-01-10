@@ -26,6 +26,7 @@ namespace Tests.Integration
             Assert.AreEqual(person.Email, result.Email);
 
             session.Delete(id);
+            session.SubmitChanges();
         }
 
         [Test]
@@ -53,6 +54,7 @@ namespace Tests.Integration
             {
                 session.Delete(person.Id);
             }
+            session.SubmitChanges();
         }
 
         [Test]
@@ -104,6 +106,7 @@ namespace Tests.Integration
                 {
                     session.Delete(person.Id);
                 }
+                session.SubmitChanges();
             }
         }
 
@@ -144,6 +147,7 @@ namespace Tests.Integration
             Assert.AreEqual(org.Name, result.Name);
 
             session.Delete(org.Id);
+            session.SubmitChanges();
         }
 
         private CogsSession GetCogsSession()

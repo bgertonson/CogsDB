@@ -4,9 +4,4 @@
     {
         string GetNextIdentity<T>();
     }
-
-    public interface IIdentityProvider
-    {
-        int GetNextBlock(string type);
-    }
 }

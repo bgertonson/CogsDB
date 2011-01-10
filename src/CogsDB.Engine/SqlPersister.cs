@@ -7,7 +7,7 @@ using Opsbasoft.Blocks.Data;
 
 namespace CogsDB.Engine
 {
-    public class SqlPersister : ICogsPersister, IIdentityProvider
+    public class SqlPersister : ICogsPersister
     {
         private String Connection { get; set; }
         private IDictionary<string, object> _cache = new Dictionary<string, object>();
@@ -22,25 +22,6 @@ namespace CogsDB.Engine
         private const string PUT_UPDATE_SQL = "update documents set [doc] = @doc, [meta] = @meta, [modify-date] = @modify where [id] = @id";
 
         private const string GET_ALL_OF_TYPE_SQL = "select [id], [type], [doc], [meta], [create-date], [modify-date] from [documents] where [type] = @type";
-
-        private const string IDENTITY_SQL =
-            @"declare @num int
-select @num = [last-block]
-from   [id-blocks]
-where  [type] = @type
-
-if @num is null
-	begin
-		insert into [id-blocks] values (@type, 1)
-		set @num = 1
-	end
-else
-	begin
-		set @num = @num + 1
-		update [id-blocks] set [last-block] = @num
-		where  [type] = @type
-	end
-select @num";
         #endregion
 
         public SqlPersister(string connection)
@@ -166,21 +147,6 @@ select @num";
                 db.ExecuteNonQuery(cmd);
                 //TODO: Remove from cache
             }
-        }
-
-        public int GetNextBlock(string type)
-        {
-            int blockNum;
-
-            var db = DatabaseFactory.CreateDatabase(Connection);
-            using (var transaction = new TransactionScope())
-            using (var cmd = db.GetSqlStringCommand(IDENTITY_SQL))
-            {
-                db.AddInParameter(cmd, "type", DbType.String, type);
-                blockNum = DBNullConvert.To<int>(db.ExecuteScalar(cmd));
-                transaction.Complete();
-            }
-            return blockNum;
         }
 
         private Document HydrateDocument(IDataReader reader)

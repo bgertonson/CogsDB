@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Transactions;
 
 namespace CogsDB.Engine
 {
@@ -10,10 +11,12 @@ namespace CogsDB.Engine
         private readonly IDocumentSerializer _serializer;
         private readonly IIdentityServer _identityServer;
 
-        private readonly IDictionary<string, Document> _tracking =
+        private readonly IDictionary<string, Document> _tracked =
             new Dictionary<string, Document>(StringComparer.CurrentCultureIgnoreCase);
 
-        private readonly IList<Document> _queue = new List<Document>();
+        private readonly IList<string> _deletes = new List<string>();
+
+        private readonly IList<Document> _updates = new List<Document>();
 
         public CogsSession(ICogsPersister persister, IDocumentSerializer serializer)
         {
@@ -27,7 +30,7 @@ namespace CogsDB.Engine
             var doc = _persister.Get(id);
             if (doc == null) return null;
             
-            _tracking.Add(id, doc);
+            _tracked.Add(id, doc);
             var @object = _serializer.Deserialize<T>(doc.Content);
             return @object;
         }
@@ -38,7 +41,7 @@ namespace CogsDB.Engine
             var docs = _persister.Get(ids);
             foreach (var doc in docs)
             {
-                _tracking[doc.Id] = doc;
+                _tracked[doc.Id] = doc;
                 objects.Add(_serializer.Deserialize<T>(doc.Content));
             }
             return objects.ToArray();
@@ -50,7 +53,7 @@ namespace CogsDB.Engine
             IList<T> objects = new List<T>();
             foreach (var doc in docs)
             {
-                _tracking[doc.Id] = doc;
+                _tracked[doc.Id] = doc;
                 objects.Add(_serializer.Deserialize<T>(doc.Content));
             }
             return objects.ToArray();
@@ -60,13 +63,54 @@ namespace CogsDB.Engine
         {
             Document document = BuildDocument(@object);
 
-            _queue.Add(document);
+            _updates.Add(document);
         }
 
         internal void StoreImmediate<T>(T @object) where T: class
         {
             var document = BuildDocument(@object);
             _persister.Put(new[]{document});
+        }
+
+        public void Delete(string id)
+        {
+            _deletes.Add(id);
+        }
+
+        public void SubmitChanges()
+        {
+            using (var transaction = new TransactionScope(TransactionScopeOption.Required))
+            {
+                _persister.Put(_updates.ToArray());
+                foreach (var id in _deletes)
+                {
+                    _persister.Delete(id);
+                }
+
+                _updates.Clear();
+                _deletes.Clear();
+                _tracked.Clear();
+                transaction.Complete();
+            }
+        }
+
+        private bool IsTracked(string id)
+        {
+            return _tracked.ContainsKey(id);
+        }
+
+        private string ExtractId<T>(T document)
+        {
+            var type = typeof(T);
+            var prop = type.GetProperty("Id");
+            var value = prop.GetValue(document, null) as String;
+
+            if (value != null) return value;
+
+            value = _identityServer.GetNextIdentity<T>();
+            prop.SetValue(document, value, null);
+
+            return value;
         }
 
         private Document BuildDocument<T>(T @object) where T: class
@@ -86,37 +130,6 @@ namespace CogsDB.Engine
                            ModifyDate = DateTime.Now,
                            IsNew = isNew
                        };
-        }
-
-        public void Delete(string id)
-        {
-            _persister.Delete(id);
-        }
-
-        public void SubmitChanges()
-        {
-            _persister.Put(_queue.ToArray());
-            _queue.Clear();
-            _tracking.Clear();
-        }
-
-        private bool IsTracked(string id)
-        {
-            return _tracking.ContainsKey(id);
-        }
-
-        private string ExtractId<T>(T document)
-        {
-            var type = typeof(T);
-            var prop = type.GetProperty("Id");
-            var value = prop.GetValue(document, null) as String;
-
-            if (value != null) return value;
-
-            value = _identityServer.GetNextIdentity<T>();
-            prop.SetValue(document, value, null);
-
-            return value;
         }
 
         private Metadata ExtractMetadata(object @object)
