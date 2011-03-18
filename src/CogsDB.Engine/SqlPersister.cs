@@ -11,6 +11,7 @@ namespace CogsDB.Engine
     {
         private String Connection { get; set; }
         private IDictionary<string, object> _cache = new Dictionary<string, object>();
+        private object _lock = new object();
 
         #region [SQL]
         private const String DELETE_SQL = "delete from documents where id = @id";
@@ -31,8 +32,8 @@ namespace CogsDB.Engine
 
         public void Put(Document document)
         {
-            if (document.IsNew) Create(document);
-            else Update(document);
+                if (document.IsNew) Create(document);
+                else Update(document);
         }
 
         private void Create(Document document)

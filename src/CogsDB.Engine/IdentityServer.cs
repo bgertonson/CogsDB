@@ -8,7 +8,7 @@ namespace CogsDB.Engine
     {
         private static IDictionary<Type, IdBlock> _idServer = new Dictionary<Type, IdBlock>();
         private ICogsSession _session;
-        private object _lock = new object();
+        private static object _lock = new object();
 
         public IdentityServer(ICogsSession session)
         {
@@ -17,9 +17,12 @@ namespace CogsDB.Engine
 
         public string GetNextIdentity<T>()
         {
-            var server = GetServerForType(typeof (T));
-            var id = String.Format("{0}-{1}", typeof (T).Name, server.GetId());
-            return id;
+            lock (_lock)
+            {
+                var server = GetServerForType(typeof (T));
+                var id = String.Format("{0}-{1}", typeof (T).Name, server.GetId());
+                return id;
+            }
         }
 
         private IdBlock GetServerForType(Type type)
@@ -32,7 +35,7 @@ namespace CogsDB.Engine
         private IdBlock InitializeForType(Type type)
         {
             IdBlock block = GetNewBlock(type);
-            _idServer.Add(type, block);
+            _idServer[type] = block;
             return block;
         }
 
@@ -45,15 +48,12 @@ namespace CogsDB.Engine
 
         private IdBlock GetNewBlock(Type type)
         {
-            lock (_lock)
-            {
                 var tracker = _session.Load<IdTrackingDocument>(CogsSystem.Ids.IdentityTrackingDocument);
                 if (tracker == null) tracker = BuildTracker();
                 var typeTracker = tracker.GetTracker(type);
                 typeTracker.Increment();
                 (_session as CogsSession).StoreImmediate<IdTrackingDocument>(tracker);
                 return new IdBlock(typeTracker.LastBlock, typeTracker.BlockSize);
-            }
         }
 
         private IdTrackingDocument BuildTracker()

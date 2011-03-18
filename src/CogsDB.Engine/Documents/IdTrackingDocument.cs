@@ -28,7 +28,7 @@ namespace CogsDB.Engine.Documents
             var tracker = Trackers.FirstOrDefault(x => x.Type == name);
             if (tracker == null)
             {
-                tracker = new IdTracker { Type = name, LastBlock = 1, BlockSize = 5 };
+                tracker = new IdTracker { Type = name, LastBlock = 0, BlockSize = 5 };
                 Trackers.Add(tracker);
             }
             return tracker;

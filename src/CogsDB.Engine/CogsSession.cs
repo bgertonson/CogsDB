@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Transactions;
+using CogsDB.Engine.Indexing;
 
 namespace CogsDB.Engine
 {
@@ -11,8 +12,11 @@ namespace CogsDB.Engine
         private readonly IDocumentSerializer _serializer;
         private readonly IIdentityServer _identityServer;
 
+        private static readonly Dictionary<string, Document> _cache =
+            new Dictionary<string, Document>(StringComparer.OrdinalIgnoreCase);
+
         private readonly IDictionary<string, Document> _tracked =
-            new Dictionary<string, Document>(StringComparer.CurrentCultureIgnoreCase);
+            new Dictionary<string, Document>(StringComparer.OrdinalIgnoreCase);
 
         private readonly IList<string> _deletes = new List<string>();
 
@@ -27,7 +31,9 @@ namespace CogsDB.Engine
 
         public T Load<T>(string id) where T: class
         {
-            var doc = _persister.Get(id);
+            var doc = _cache.ContainsKey(id)
+                ? _cache[id]
+                : _persister.Get(id);
             if (doc == null) return null;
             
             _tracked.Add(id, doc);
@@ -79,8 +85,8 @@ namespace CogsDB.Engine
 
         public void SubmitChanges()
         {
-            using (var transaction = new TransactionScope(TransactionScopeOption.Required))
-            {
+//            using (var transaction = new TransactionScope())
+//            {
                 _persister.Put(_updates.ToArray());
                 foreach (var id in _deletes)
                 {
@@ -90,8 +96,8 @@ namespace CogsDB.Engine
                 _updates.Clear();
                 _deletes.Clear();
                 _tracked.Clear();
-                transaction.Complete();
-            }
+//                transaction.Complete();
+//            }
         }
 
         private bool IsTracked(string id)
@@ -120,7 +126,7 @@ namespace CogsDB.Engine
             bool isNew = !IsTracked(id);
             var content = _serializer.Serialize(@object);
             var meta = _serializer.Serialize(metadata);
-            return new Document
+            var doc = new Document
                        {
                            Id = id,
                            Type = typeof(T).Name,
@@ -130,6 +136,8 @@ namespace CogsDB.Engine
                            ModifyDate = DateTime.Now,
                            IsNew = isNew
                        };
+            if (isNew) _cache.Add(id, doc); else _cache[id] = doc;
+            return doc;
         }
 
         private Metadata ExtractMetadata(object @object)

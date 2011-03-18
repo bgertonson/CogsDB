@@ -152,7 +152,7 @@ namespace Tests.Integration
 
         private CogsSession GetCogsSession()
         {
-            var persister = new SqlPersister("integration");
+            var persister = new SqlPersister("sqlce");
             var serializer = new JsonSerializer();
             return new CogsSession(persister, serializer);
         }

@@ -28,12 +28,7 @@ create table documents(
 	[create-date]  datetime,
 	[modify-date]  datetime,
 	constraint pk_document_id primary key (id)
-);
-
-create table [id-blocks](
-	[type]       varchar(128),
-	[last-block] int,
-	constraint pk_idblocks_id primary key ([type])
 );'
+
 Execute(@sql)
 

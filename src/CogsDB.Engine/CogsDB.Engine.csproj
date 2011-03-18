@@ -58,6 +58,7 @@
     <Compile Include="IDocumentSerializer.cs" />
     <Compile Include="IIdentityServer.cs" />
     <Compile Include="ICogsSessionManager.cs" />
+    <Compile Include="Indexing\IndexMap.cs" />
     <Compile Include="JsonSerializer.cs" />
     <Compile Include="Metadata.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -65,6 +66,9 @@
     <Compile Include="SessionManagerFactory.cs" />
     <Compile Include="SqlPersister.cs" />
     <Compile Include="WebSessionManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Persistence\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
