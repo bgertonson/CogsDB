@@ -36,4 +36,5 @@ namespace CogsDB.Engine
             return SessionManagerFactory.GetSessionManager().GetSession();
         }
     }
+
 }

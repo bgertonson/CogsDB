@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CogsDB.Engine;
+﻿using CogsDB.Engine;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Tests.Data;
@@ -18,7 +14,6 @@ namespace Tests.Unit
             var id = "does_not_exist";
             var persister = MockRepository.GenerateMock<ICogsPersister>();
             var serializer = MockRepository.GenerateMock<IDocumentSerializer>();
-            //var identity = MockRepository.GenerateMock<IIdentityServer>();
 
             var session = new CogsSession(persister, serializer);
 
@@ -37,7 +32,6 @@ namespace Tests.Unit
             var bob = DataFactory.GetPerson("Bob", "Twilliger");
             var persister = MockRepository.GenerateMock<ICogsPersister>();
             var serializer = MockRepository.GenerateMock<IDocumentSerializer>();
-            //var identity = MockRepository.GenerateMock<IIdentityServer>();
 
             var session = new CogsSession(persister, serializer);
 
@@ -47,16 +41,6 @@ namespace Tests.Unit
             var result = session.Load<Person>(id);
 
             Assert.AreEqual(bob, result);
-        }
-
-        private ICogsSession GetSession()
-        {
-            var persister = MockRepository.GenerateMock<ICogsPersister>();
-            var serializer = MockRepository.GenerateMock<IDocumentSerializer>();
-            //var identity = MockRepository.GenerateMock<IIdentityServer>();
-            
-            var session = new CogsSession(persister, serializer);
-            return session;
         }
     }
 }

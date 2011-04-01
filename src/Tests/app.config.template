@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <configuration>
   <connectionStrings>
-    <add name="integration" connectionString="server=localhost\sqlexpress;database=docdb;uid=doc_user;pwd=d0cum3nt"/>
+    <add name="sqlce" connectionString="Data Source=testdb.sdf" providerName="System.Data.SqlServerCe.4.0" />
+	<add name="integration" connectionString="server=[SERVERNAME];database=[DBNAME];uid=[USERNAME];pwd=[PASSWORD]"/>
     <add name="remote" connectionString="url=http://localhost:19092/docdb/docs" />
   </connectionStrings>
 </configuration>

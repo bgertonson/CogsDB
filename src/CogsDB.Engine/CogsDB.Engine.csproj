@@ -34,10 +34,8 @@
     <Reference Include="Newtonsoft.Json.Net20">
       <HintPath>..\..\lib\json\Newtonsoft.Json.Net20.dll</HintPath>
     </Reference>
-    <Reference Include="Opsbasoft.Blocks.Data">
-      <HintPath>..\..\lib\opsabasoft\Opsbasoft.Blocks.Data.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
@@ -65,10 +63,12 @@
     <Compile Include="SessionFactory.cs" />
     <Compile Include="SessionManagerFactory.cs" />
     <Compile Include="SqlPersister.cs" />
+    <Compile Include="Storage\Database.cs" />
+    <Compile Include="Storage\DBNullConvert.cs" />
     <Compile Include="WebSessionManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Persistence\" />
+    <Folder Include="Configuration\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

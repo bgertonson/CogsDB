@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Transactions;
 using System.Linq;
-using Opsbasoft.Blocks.Data;
+using CogsDB.Engine.Storage;
 
 namespace CogsDB.Engine
 {
@@ -38,7 +38,7 @@ namespace CogsDB.Engine
 
         private void Create(Document document)
         {
-            var db = DatabaseFactory.CreateDatabase(Connection);
+            var db = new Database(Connection);
             using (var cmd = db.GetSqlStringCommand(PUT_CREATE_SQL))
             {
                 db.AddInParameter(cmd, "id", DbType.String, document.Id);
@@ -54,7 +54,7 @@ namespace CogsDB.Engine
 
         private void Update(Document document)
         {
-            var db = DatabaseFactory.CreateDatabase(Connection);
+            var db = new Database(Connection);
             using (var cmd = db.GetSqlStringCommand(PUT_UPDATE_SQL))
             {
                 db.AddInParameter(cmd, "id", DbType.String, document.Id);
@@ -78,7 +78,7 @@ namespace CogsDB.Engine
         public Document Get(string id)
         {
             Document document;
-            var db = DatabaseFactory.CreateDatabase(Connection);
+            var db = new Database(Connection);
             using(var cmd = db.GetSqlStringCommand(GET_SQL))
             {
                 db.AddInParameter(cmd, "id", DbType.String, id);
@@ -99,7 +99,7 @@ namespace CogsDB.Engine
             var sql = String.Format(GET_MANY_SQL, String.Join(",", @params));
 
             IList<Document> documents = new List<Document>();
-            var db = DatabaseFactory.CreateDatabase(Connection);
+            var db = new Database(Connection);
             using(var cmd = db.GetSqlStringCommand(sql))
             {
                 for (int i = 0; i < ids.Length; i++)
@@ -121,7 +121,7 @@ namespace CogsDB.Engine
         {
             IList<Document> documents = new List<Document>();
 
-            var db = DatabaseFactory.CreateDatabase(Connection);
+            var db = new Database(Connection);
             using(var cmd = db.GetSqlStringCommand(GET_ALL_OF_TYPE_SQL))
             {
                 db.AddInParameter(cmd, "type", DbType.String, type);
@@ -141,7 +141,7 @@ namespace CogsDB.Engine
 
         public void Delete(string id)
         {
-            var db = DatabaseFactory.CreateDatabase(Connection);
+            var db = new Database(Connection);
             using (var cmd = db.GetSqlStringCommand(DELETE_SQL))
             {
                 db.AddInParameter(cmd, "id", DbType.String, id);
@@ -150,7 +150,7 @@ namespace CogsDB.Engine
             }
         }
 
-        private Document HydrateDocument(IDataReader reader)
+        private static Document HydrateDocument(IDataReader reader)
         {
             return new Document
                        {

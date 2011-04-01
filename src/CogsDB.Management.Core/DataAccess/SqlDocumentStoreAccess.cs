@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Data;
 using CogsDB.Engine;
+using CogsDB.Engine.Storage;
 using CogsDB.Management.Core.Contracts;
 using CogsDB.Management.Core.Entities;
-using Opsbasoft.Blocks.Data;
+
 
 namespace CogsDB.Management.Core.DataAccess
 {
@@ -16,7 +17,7 @@ namespace CogsDB.Management.Core.DataAccess
         public IEnumerable<string> ListDocumentTypes(string docStore)
         {
             var types = new List<string>();
-            var db = DatabaseFactory.CreateDatabase(docStore);
+            var db = new Database(docStore);
             using(var cmd = db.GetSqlStringCommand(SELECT_DOC_TYPES))
             using(var reader = db.ExecuteReader(cmd))
             while(reader.Read())
@@ -29,7 +30,7 @@ namespace CogsDB.Management.Core.DataAccess
         public IEnumerable<DocumentSummary> ListDocuments(string docStore, string docType)
         {
             var docs = new List<DocumentSummary>();
-            var db = DatabaseFactory.CreateDatabase(docStore);
+            var db = new Database(docStore);
             using(var cmd = db.GetSqlStringCommand(SELECT_DOCS))
             {
                 db.AddInParameter(cmd, "type", DbType.String, docType);
