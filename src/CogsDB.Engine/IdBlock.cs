@@ -4,23 +4,23 @@ namespace CogsDB.Engine
 {
     public class IdBlock
     {
-        public IdBlock(int blockNumber, int size)
+        public IdBlock(ulong blockNumber, int size)
         {
             BlockNumber = blockNumber;
             Size = size;
-            CurrentId = (BlockNumber - 1)*Size;
+            CurrentId = (BlockNumber - 1)*(ulong)Size;
         }
 
-        public int BlockNumber { get; private set; }
+        public ulong BlockNumber { get; private set; }
         public int Size { get; private set; }
-        private int CurrentId { get; set; }
+        private ulong CurrentId { get; set; }
 
         public bool HasIdsRemaining()
         {
-            return CurrentId < (BlockNumber * Size);
+            return CurrentId < (BlockNumber * (ulong)Size);
         }
 
-        public int GetId()
+        public ulong GetId()
         {
             if(!HasIdsRemaining()) throw new IndexOutOfRangeException("This Id Block is out of Ids");
             return ++CurrentId;

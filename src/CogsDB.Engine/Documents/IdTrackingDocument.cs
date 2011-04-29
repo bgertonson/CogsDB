@@ -37,7 +37,7 @@ namespace CogsDB.Engine.Documents
         public class IdTracker
         {
             public string Type { get; set; }
-            public int LastBlock { get; set; }
+            public ulong LastBlock { get; set; }
             public int BlockSize { get; set; }
 
             public void Increment()

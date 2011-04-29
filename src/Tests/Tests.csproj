@@ -49,6 +49,7 @@
     <Compile Include="Data\Organization.cs" />
     <Compile Include="Data\Person.cs" />
     <Compile Include="Integration\CogsClientTests.cs" />
+    <Compile Include="Integration\InitializationTests.cs" />
     <Compile Include="Integration\ThreadTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Unit\CogsSessionTests.cs" />

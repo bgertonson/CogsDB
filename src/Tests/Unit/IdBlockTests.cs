@@ -20,7 +20,7 @@ namespace Tests.Unit
         public void GetId_ExpendAllIds_LastIdIsFive()
         {
             var block = new IdBlock(1, 5);
-            int id = 0;
+            ulong id = 0;
             while(block.HasIdsRemaining())
             {
                 id = block.GetId();
@@ -35,8 +35,8 @@ namespace Tests.Unit
             var blockA = new IdBlock(1, 5);
             var blockB = new IdBlock(2, 5);
 
-            int lastId = 0;
-            int nextId = 0;
+            ulong lastId = 0;
+            ulong nextId = 0;
 
             while(blockA.HasIdsRemaining())
             {

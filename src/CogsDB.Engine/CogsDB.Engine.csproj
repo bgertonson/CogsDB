@@ -42,10 +42,12 @@
     <Reference Include="System.Web.Abstractions" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cogs.cs" />
     <Compile Include="CogsSession.cs" />
     <Compile Include="CogsSessionManagementStrategy.cs" />
     <Compile Include="CogsStorage.cs" />
     <Compile Include="CogsSystem.cs" />
+    <Compile Include="Configuration\IStorageConfiguration.cs" />
     <Compile Include="Document.cs" />
     <Compile Include="Documents\IdTrackingDocument.cs" />
     <Compile Include="ICogsPersister.cs" />
@@ -67,9 +69,7 @@
     <Compile Include="Storage\DBNullConvert.cs" />
     <Compile Include="WebSessionManager.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Configuration\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

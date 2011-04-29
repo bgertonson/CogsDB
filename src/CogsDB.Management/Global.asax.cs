@@ -13,6 +13,7 @@ namespace CogsDB.Management
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+            routes.IgnoreRoute("favicon.ico");
 
             routes.MapRoute(
                 "Document", "{docStore}/{docType}/{docId}", new {controller = "Home", action = "ViewDocument"});

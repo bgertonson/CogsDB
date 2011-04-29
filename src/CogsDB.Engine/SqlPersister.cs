@@ -64,7 +64,6 @@ namespace CogsDB.Engine
 
                 db.ExecuteNonQuery(cmd);
             }
-
         }
 
         public void Put(IEnumerable<Document> documents)
