@@ -136,14 +136,17 @@ namespace CogsDB.Engine.Storage
             return command.ExecuteScalar();
         }
 
-        private DbConnection GetOpenConnection()
+        private ConnectionWrapper GetOpenConnection()
         {
             return GetOpenConnection(true);
         }
 
-        private DbConnection GetOpenConnection(bool disposeInnerConnection)
+        private ConnectionWrapper GetOpenConnection(bool disposeInnerConnection)
         {
-            return GetNewOpenConnection();
+            DbConnection connection = TransactionScopeConnections.GetConnection(this);
+            return connection != null
+                ? new ConnectionWrapper(connection, false)
+                : new ConnectionWrapper(GetNewOpenConnection(), disposeInnerConnection);
         }
 
         internal DbConnection GetNewOpenConnection()
@@ -163,12 +166,12 @@ namespace CogsDB.Engine.Storage
             return connection;
         }
 
-        protected static void PrepareCommand(DbCommand command, DbConnection connection)
+        protected static void PrepareCommand(DbCommand command, ConnectionWrapper connection)
         {
             if (command == null) throw new ArgumentNullException("command");
             if (connection == null) throw new ArgumentException("connection");
 
-            command.Connection = connection;
+            command.Connection = connection.Connection;
         }
 
         public virtual string BuildParameterName(string name)
@@ -181,5 +184,4 @@ namespace CogsDB.Engine.Storage
             get { return _connectionString; }
         }
     }
-
 }

@@ -65,8 +65,10 @@
     <Compile Include="SessionFactory.cs" />
     <Compile Include="SessionManagerFactory.cs" />
     <Compile Include="SqlPersister.cs" />
+    <Compile Include="Storage\ConnectionWrapper.cs" />
     <Compile Include="Storage\Database.cs" />
     <Compile Include="Storage\DBNullConvert.cs" />
+    <Compile Include="Storage\TransactionScopeConnections.cs" />
     <Compile Include="WebSessionManager.cs" />
   </ItemGroup>
   <ItemGroup />

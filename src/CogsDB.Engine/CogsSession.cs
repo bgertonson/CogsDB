@@ -85,8 +85,8 @@ namespace CogsDB.Engine
 
         public void SubmitChanges()
         {
-//            using (var transaction = new TransactionScope())
-//            {
+            using (var transaction = new TransactionScope())
+            {
                 _persister.Put(_updates.ToArray());
                 foreach (var id in _deletes)
                 {
@@ -96,8 +96,8 @@ namespace CogsDB.Engine
                 _updates.Clear();
                 _deletes.Clear();
                 _tracked.Clear();
-//                transaction.Complete();
-//            }
+                transaction.Complete();
+            }
         }
 
         private bool IsTracked(string id)
