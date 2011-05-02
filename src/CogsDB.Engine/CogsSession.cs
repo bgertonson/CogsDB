@@ -132,8 +132,8 @@ namespace CogsDB.Engine
                            Type = typeof(T).Name,
                            Content = content,
                            Metadata = meta,
-                           CreateDate = DateTime.Now,
-                           ModifyDate = DateTime.Now,
+                           CreateDate = DateTime.UtcNow,
+                           ModifyDate = DateTime.UtcNow,
                            IsNew = isNew
                        };
             if (isNew) _cache.Add(id, doc); else _cache[id] = doc;

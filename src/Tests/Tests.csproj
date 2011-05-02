@@ -52,6 +52,7 @@
     <Compile Include="Integration\InitializationTests.cs" />
     <Compile Include="Integration\ThreadTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Query\WhereTests.cs" />
     <Compile Include="Unit\CogsSessionTests.cs" />
     <Compile Include="Unit\IdBlockTests.cs" />
   </ItemGroup>
